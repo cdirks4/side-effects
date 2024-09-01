@@ -15,7 +15,7 @@ export default function Home() {
       
 
       {/* Hero Section */}
-      <section className="bg-gray-800 py-20 shadow-lg">
+      <section className="bg-gray-800 py-16 shadow-lg">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             pip-ai: Fix your broken dependencies 
@@ -53,7 +53,7 @@ We've built an AI agent framwork that will take any python project with mismatch
 
 
         </div>
-        <div className='flex justify-center'>
+        <div className='flex justify-center mt-2'>
         <Link href="/waitlist">
             <span className="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition duration-300 cursor-pointer shadow-lg">
               Join Our Waitlist
