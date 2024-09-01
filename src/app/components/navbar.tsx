@@ -6,7 +6,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="text-xl font-bold text-white">pip-ai</div>
         <div className="hidden md:flex space-x-8">
-          <Link href="/">
+          {/* <Link href="/">
             <span className="text-gray-300 hover:text-white cursor-pointer">Home</span>
           </Link>
           <Link href="/about">
@@ -19,7 +19,7 @@ const Navbar = () => {
             <span className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300 cursor-pointer">
               Log In
             </span>
-          </Link>
+          </Link> */}
         </div>
         <button className="md:hidden flex items-center">
           <svg
