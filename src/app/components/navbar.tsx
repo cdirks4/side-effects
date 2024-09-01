@@ -4,7 +4,7 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-900 shadow-lg py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <div className="text-xl font-bold text-white">AI Pip</div>
+        <div className="text-xl font-bold text-white">pip-ai</div>
         <div className="hidden md:flex space-x-8">
           <Link href="/">
             <span className="text-gray-300 hover:text-white cursor-pointer">Home</span>
