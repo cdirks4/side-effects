@@ -111,7 +111,7 @@ Reduce Install Time          </h1>        <p className="text-lg md:text-xl text-
       </a>
 
       <a
-        href="https://x.com/your-twitter-link" // Replace with your actual Twitter (X) link
+        href="https://tally.so/r/3XEKKV" // Replace with your actual Twitter (X) link
         target="_blank"
         rel="noopener noreferrer"
         className="bg-gray-500 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition duration-300 shadow-lg"
