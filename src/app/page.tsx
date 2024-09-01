@@ -20,7 +20,7 @@ export default function Home() {
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             pip-ai: Fix your broken dependencies 
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 mb-6">
+          <p className="text-lg md:text-xl text-gray-300 mb-6 max-w-[60vw] mx-auto">
 We've built an AI agent framwork that will take any python project with mismatching dependencies and align your dependencies with one line of code.          </p>
 <div className="bg-gray-900 text-green-400 font-mono text-lg md:text-xl py-4 px-6 rounded-lg mb-6 inline-block shadow-md cursor-pointer">
   <span className="text-blue-400">pip-ai</span> fix <span className="text-gray-100">&lt;your_repo_here&gt;</span>
@@ -73,21 +73,21 @@ Reduce Install Time          </h1>        <p className="text-lg md:text-xl text-
         </div>
       </section>
  {/* About Section */}
- <section className="py-20 bg-gray-900 shadow-md">
+ <section className="py-16 bg-gray-900 shadow-md">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-8">Our Commitment</h2>
-          <p className="text-lg text-gray-400">
+          <h2 className="text-3xl font-bold text-white mb-6">Our Commitment</h2>
+          <p className="text-lg text-gray-400 max-w-[60vw] mx-auto">
             We are a group of developers who have faced the frustration of incompatible dependencies in GitHub repositories for years. Our mission is to create an AI-driven tool to solve this issue for everyone.
           </p>
         </div>
       </section>
       {/* Support Section */}
-      <section className="py-20 bg-gray-800 shadow-md">
+      <section className="py-16 bg-gray-800 shadow-md">
   <div className="container mx-auto px-4 text-center">
-    <h2 className="text-3xl font-bold text-white mb-8">
+    <h2 className="text-3xl font-bold text-white mb-6">
       Show us how painful is this issue for you
     </h2>
-    <p className="text-lg text-gray-400 mb-6">
+    <p className="text-lg text-gray-400 mb-6 max-w-[60vw] mx-auto">
       We&apos;re competing with other teams to build this project. Your support helps us rise to the top and secure the resources needed to bring this AI version control tool to life.
     </p>
 
