@@ -33,7 +33,7 @@ export default function Home() {
         <div className="flex justify-center mt-2">
           <Link href="/waitlist">
             <span className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition duration-300 cursor-pointer shadow-lg">
-              Join the Community
+              Join the Waitlist
             </span>
           </Link>
         </div>
