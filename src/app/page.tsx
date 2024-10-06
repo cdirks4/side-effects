@@ -73,63 +73,76 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-red-700 mb-6">
             Who Can Benefit From Our Platform?
           </h2>
-          <div className="text-left max-w-[60vw] mx-auto">
-            <h3 className="text-2xl font-semibold text-red-700 mt-6">
-              Everyday Users Experiencing Side Effects
-            </h3>
-            <p className="text-lg text-gray-700">
-              These are individuals currently dealing with side effects and
-              seeking additional information—whether from official sources or
-              real-world reports.
-            </p>
-            <p className="text-lg text-gray-700 mt-2">
-              <span className="font-bold">Goal:</span> To quickly find reliable
-              information about their side effects, using a combination of
-              medical documentation and user experiences, to better understand
-              if their experiences are common or rare.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[80vw] mx-auto">
+            {/* Card for Everyday Users */}
+            <div className="bg-white shadow-lg rounded-lg p-6">
+              <h3 className="text-2xl font-semibold text-red-700 mb-4">
+                Everyday Users Experiencing Side Effects
+              </h3>
+              <p className="text-lg text-gray-700">
+                These are individuals currently dealing with side effects and
+                seeking additional information—whether from official sources or
+                real-world reports.
+              </p>
+              <p className="text-lg text-gray-700 mt-4">
+                <span className="font-bold">Goal:</span> To quickly find
+                reliable information about their side effects, using a
+                combination of medical documentation and user experiences, to
+                better understand if their experiences are common or rare.
+              </p>
+            </div>
 
-            <h3 className="text-2xl font-semibold text-red-700 mt-6">
-              Speculative Users
-            </h3>
-            <p className="text-lg text-gray-700">
-              Individuals seeking a deeper understanding of potential side
-              effects before starting a new medication or as they evaluate their
-              current treatments.
-            </p>
-            <p className="text-lg text-gray-700 mt-2">
-              <span className="font-bold">Goal:</span> To make well-informed
-              decisions about new or ongoing treatments by understanding
-              potential side effects through a mix of official data and
-              user-reported experiences.
-            </p>
+            {/* Card for Speculative Users */}
+            <div className="bg-white shadow-lg rounded-lg p-6">
+              <h3 className="text-2xl font-semibold text-red-700 mb-4">
+                Speculative Users
+              </h3>
+              <p className="text-lg text-gray-700">
+                Individuals seeking a deeper understanding of potential side
+                effects before starting a new medication or as they evaluate
+                their current treatments.
+              </p>
+              <p className="text-lg text-gray-700 mt-4">
+                <span className="font-bold">Goal:</span> To make well-informed
+                decisions about new or ongoing treatments by understanding
+                potential side effects through a mix of official data and
+                user-reported experiences.
+              </p>
+            </div>
 
-            <h3 className="text-2xl font-semibold text-red-700 mt-6">
-              Patients Feeling Uncertain
-            </h3>
-            <p className="text-lg text-gray-700">
-              These users are looking for clarity when traditional sources
-              haven’t provided sufficient answers about their side effects.
-            </p>
-            <p className="text-lg text-gray-700 mt-2">
-              <span className="font-bold">Goal:</span> To gain a broader
-              perspective by accessing relevant data and similar experiences
-              reported by others, providing more context to their situation.
-            </p>
+            {/* Card for Patients Feeling Uncertain */}
+            <div className="bg-white shadow-lg rounded-lg p-6">
+              <h3 className="text-2xl font-semibold text-red-700 mb-4">
+                Patients Feeling Uncertain
+              </h3>
+              <p className="text-lg text-gray-700">
+                These users are looking for clarity when traditional sources
+                haven’t provided sufficient answers about their side effects.
+              </p>
+              <p className="text-lg text-gray-700 mt-4">
+                <span className="font-bold">Goal:</span> To gain a broader
+                perspective by accessing relevant data and similar experiences
+                reported by others, providing more context to their situation.
+              </p>
+            </div>
 
-            <h3 className="text-2xl font-semibold text-red-700 mt-6">
-              Researchers and Healthcare Professionals
-            </h3>
-            <p className="text-lg text-gray-700">
-              While the platform primarily serves patients, researchers and
-              healthcare professionals can use it to uncover underreported side
-              effects, supplementing official data with real-world experiences.
-            </p>
-            <p className="text-lg text-gray-700 mt-2">
-              <span className="font-bold">Goal:</span> To access a comprehensive
-              dataset that helps improve patient care, identify trends, and
-              inform future research.
-            </p>
+            {/* Card for Researchers and Healthcare Professionals */}
+            <div className="bg-white shadow-lg rounded-lg p-6">
+              <h3 className="text-2xl font-semibold text-red-700 mb-4">
+                Researchers and Healthcare Professionals
+              </h3>
+              <p className="text-lg text-gray-700">
+                While the platform primarily serves patients, researchers and
+                healthcare professionals can use it to uncover underreported
+                side effects, supplementing official data with real-world
+                experiences.
+              </p>
+              <p className="text-lg text-gray-700 mt-4">
+                <span className="font-bold">Goal:</span> To access a
+                comprehensive dataset that helps improve patient care, identify
+                trends, and inform future research.
+              </p>
+            </div>
           </div>
         </div>
       </section>
