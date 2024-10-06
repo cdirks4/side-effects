@@ -7,7 +7,7 @@ import Navbar from "./components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "meds-ai",
+  title: "Am I the Only One",
   description: "Ai side effect discovery",
 };
 
