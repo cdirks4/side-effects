@@ -7,8 +7,8 @@ import Navbar from "./components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "pip-ai",
-  description: "Ai version control for all your broken dependencies",
+  title: "meds-ai",
+  description: "Ai side effect discovery",
 };
 
 export default function RootLayout({
@@ -16,11 +16,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
- 
-
   return (
     <html lang="en">
-     
       <body className={`${inter.className} h-screen bg-white`}>
         <Navbar />
         {children}
