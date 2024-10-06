@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <nav className="bg-gradient-to-b from-red-600 to-red-400 shadow-xl py-6">
+    <nav className="bg-gradient-to-b from-red-700 to-red-500 shadow-xl py-6 border-b border-red-600">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="text-xl font-bold text-white ml-[-2rem]">
           Am I the Only One
