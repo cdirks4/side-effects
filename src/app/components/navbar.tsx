@@ -10,7 +10,7 @@ const Navbar = () => {
           Am I the Only One
         </div>
         <div className="md:flex space-x-8">
-          <button onClick={() => alert("Chill we aren't there yet")}>
+          <button onClick={() => alert("Under Construction")}>
             <span className="bg-white text-red-600 px-4 py-2 rounded-full hover:bg-gray-100 transition duration-300 cursor-pointer">
               Log In
             </span>

@@ -1,8 +1,43 @@
 "use client";
 import Head from "next/head";
 import Link from "next/link";
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
+  // Data for the donut chart
+  const data = {
+    labels: ["Side Effects Found After Release", "No New Side Effects Found"],
+    datasets: [
+      {
+        data: [30.8, 69.2], // 30.8% with side effects found after release, 69.2% without
+        backgroundColor: ["#B22222", "#A9A9A9"], // Darker red and grey colors
+        hoverBackgroundColor: ["#8B0000", "#808080"], // Even darker hover colors
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            return `${tooltipItem.label}: ${tooltipItem.raw}%`;
+          },
+        },
+      },
+    },
+    cutout: "70%", // This creates space in the middle of the donut for text
+  };
+
   return (
     <div className="bg-gray-50 text-gray-800">
       <Head>
@@ -54,16 +89,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-16 bg-red-50 shadow-md">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-red-700 mb-6">Our Mission</h2>
-          <p className="text-lg text-gray-700 max-w-[60vw] mx-auto">
-            We're committed to uncovering the full story behind medication side
-            effects by analyzing data from a variety of sources. Our goal is to
-            empower users with better insights, helping them make more informed
-            decisions about their treatments.
+      {/* Importance of Uncovering Hidden Side Effects */}
+      <section className="bg-red-50 py-16 shadow-md">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-red-700 mb-6 text-center">
+            Uncovering Hidden Side Effects
+          </h2>
+          <p className="text-lg text-gray-700 max-w-[60vw] mx-auto mb-6 text-center">
+            When you experience side effects from a drug, you want answers. "Am
+            I the Only One" helps you discover whether others are experiencing
+            similar symptoms, helping you see a doctor faster and seek the right
+            care, potentially avoiding long-term complications.
           </p>
+          <p className="text-lg text-gray-700 max-w-[60vw] mx-auto mb-6 text-center">
+            Doctors and pharmaceutical companies don&apos;t always know every
+            possible symptom, as many side effects only become apparent after a
+            medication is widely used. Some effects might remain hidden until
+            more people start using the drug.
+          </p>
+
+          <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-[400px]">
+            <h3 className="text-xl font-semibold text-red-700 mb-4 text-center">
+              Side Effects Discovered After Drug Release
+            </h3>
+            <div className="relative h-60">
+              <Doughnut data={data} options={options} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-2xl font-bold text-red-700">30.8%</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600 mt-4 text-center">
+              New Drugs: 30.8% had significant side effects discovered after
+              release (2001-2010).
+            </p>
+          </div>
         </div>
       </section>
 
@@ -143,38 +202,6 @@ export default function Home() {
                 trends, and inform future research.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Support Section */}
-      <section className="py-16 bg-gray-200 shadow-md">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-red-700 mb-6">
-            Help Us Bring Hidden Side Effects to Light
-          </h2>
-          <p className="text-lg text-gray-700 mb-6 max-w-[60vw] mx-auto">
-            Your support helps us continue to grow and enhance our AI-powered
-            platform. Together, we can uncover unlisted side effects and make
-            healthcare more transparent.
-          </p>
-          <div className="flex justify-center space-x-4">
-            <a
-              href="https://calendly.com/YourLinkHere" // Replace with your actual Calendly link
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition duration-300 shadow-lg"
-            >
-              Talk to Us
-            </a>
-            <a
-              href="https://YourSurveyLinkHere" // Replace with your actual survey or waitlist link
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gray-500 text-white px-6 py-3 rounded-full hover:bg-gray-600 transition duration-300 shadow-lg"
-            >
-              Join the Waitlist
-            </a>
           </div>
         </div>
       </section>
