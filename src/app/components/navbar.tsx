@@ -7,7 +7,7 @@ const Navbar = () => {
     <nav className="bg-gradient-to-b from-red-700 to-red-500 shadow-xl py-6 border-b border-red-600">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="text-xl font-bold text-white ml-[-2rem]">
-          Am I the Only One
+          <Link href="/">Am I the Only One</Link>
         </div>
         <div className="md:flex space-x-8">
           <button onClick={() => alert("Under Construction")}>

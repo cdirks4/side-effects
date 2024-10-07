@@ -3,10 +3,12 @@ import Head from "next/head";
 import Link from "next/link";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-
+import { useState } from "react";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
+  const [selectedSegment, setSelectedSegment] = useState<string | null>(null);
+
   // Data for the donut chart
   const data = {
     labels: ["Side Effects Found After Release", "No New Side Effects Found"],
@@ -36,6 +38,13 @@ export default function Home() {
       },
     },
     cutout: "70%", // This creates space in the middle of the donut for text
+    onClick: (evt, elements) => {
+      if (elements.length > 0) {
+        const index = elements[0].index;
+        const label = data.labels[index];
+        setSelectedSegment(label);
+      }
+    },
   };
 
   return (
@@ -93,24 +102,25 @@ export default function Home() {
       <section className="bg-red-50 py-16 shadow-md">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-red-700 mb-6 text-center">
-            Uncovering Hidden Side Effects
+            Revealing Uncommon Side Effects
           </h2>
           <p className="text-lg text-gray-700 max-w-[60vw] mx-auto mb-6 text-center">
             When you experience side effects from a drug, you want answers. "Am
-            I the Only One" helps you discover whether others are experiencing
-            similar symptoms, helping you see a doctor faster and seek the right
-            care, potentially avoiding long-term complications.
+            I the Only One" helps you find out if others have reported
+            experiencing similar symptoms, enabling you to seek medical advice
+            sooner and get the right care, potentially preventing long-term
+            issues.
           </p>
           <p className="text-lg text-gray-700 max-w-[60vw] mx-auto mb-6 text-center">
-            Doctors and pharmaceutical companies don&apos;t always know every
-            possible symptom, as many side effects only become apparent after a
-            medication is widely used. Some effects might remain hidden until
-            more people start using the drug.
+            Even with extensive clinical trials, doctors and pharmaceutical
+            companies don&apos;t always know every possible side effect. Many
+            side effects become apparent only after a medication is used by a
+            larger population.
           </p>
 
           <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-[400px]">
             <h3 className="text-xl font-semibold text-red-700 mb-4 text-center">
-              Side Effects Discovered After Drug Release
+              Side Effects Discovered After Wider Use
             </h3>
             <div className="relative h-60">
               <Doughnut data={data} options={options} />
