@@ -14,11 +14,11 @@ export default function Waitlist() {
   // Replace with your Google Form URL and entry IDs
   const formActionUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLScLfMxNyHsBf3XreSWEn6Rkujp27VnOAzsi_jhlQR3XGf2mJA/formResponse";
-  const emailEntryField = "entry.162371681";
-  const sideEffectEntryField = "entry.386463666";
-  const onlineValidationEntryField = "entry.177482849";
-  const appInterestEntryField = "entry.2014182556";
-  const willingnessToPayEntryField = "entry.2038789610";
+  const emailEntryField = "entry.177482849";
+  const sideEffectEntryField = "entry.162371681";
+  const onlineValidationEntryField = "entry.2014182556";
+  const appInterestEntryField = "entry.2038789610";
+  const willingnessToPayEntryField = "entry.386463666";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,13 +40,11 @@ export default function Waitlist() {
 
     try {
       // Submit to Google Forms
-      const res = await fetch(formActionUrl, {
+      await fetch(formActionUrl, {
         method: "POST",
         body: formData,
         mode: "no-cors",
       });
-      const data = await res.json();
-      console.log("Form submission response: ", data);
       setIsSubmitted(true);
       setMessage("Thank you! Your responses have been recorded.");
       setEmail("");
