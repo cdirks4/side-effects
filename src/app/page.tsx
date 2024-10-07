@@ -71,11 +71,13 @@ export default function Home() {
             powerful, data-driven platform.
           </p>
           <div className="bg-red-600 text-white font-mono text-lg md:text-xl py-4 px-6 rounded-lg mb-6 inline-block shadow-md cursor-pointer hover:bg-red-700 transition duration-300">
-            <span>Explore</span> Side Effect Data
+            <Link href="https://docs.google.com/forms/d/e/1FAIpQLScLfMxNyHsBf3XreSWEn6Rkujp27VnOAzsi_jhlQR3XGf2mJA/viewform">
+              <span>Explore</span> Side Effect Data
+            </Link>
           </div>
         </div>
         <div className="flex justify-center mt-2">
-          <Link href="/waitlist">
+          <Link href="https://docs.google.com/forms/d/e/1FAIpQLScLfMxNyHsBf3XreSWEn6Rkujp27VnOAzsi_jhlQR3XGf2mJA/viewform">
             <span className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition duration-300 cursor-pointer shadow-lg">
               Join the Waitlist
             </span>
