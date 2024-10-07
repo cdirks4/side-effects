@@ -69,7 +69,7 @@ export default function Waitlist() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg mt-[-10rem]">
+      <main className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg ">
         <h1 className="text-3xl font-bold mb-6 text-center text-red-700">
           Have You Faced Unusual Side-Effects?
         </h1>
