@@ -79,7 +79,7 @@ export default function Home() {
         <div className="flex justify-center mt-2">
           <Link href="/waitlist">
             <span className="bg-red-500 text-white px-6 py-3 rounded-full hover:bg-red-600 transition duration-300 cursor-pointer shadow-lg">
-              Join the Waitlist
+              Share Your Experience{" "}
             </span>
           </Link>
         </div>
@@ -102,38 +102,43 @@ export default function Home() {
 
       {/* Importance of Uncovering Hidden Side Effects */}
       <section className="bg-red-50 py-16 shadow-md">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-red-700 mb-6 text-center">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-8 text-red-700">
             Revealing Uncommon Side Effects
           </h2>
-          <p className="text-lg text-gray-700 max-w-[60vw] mx-auto mb-6 text-center">
-            When you experience side effects from a drug, you want answers. "Am
-            I the Only One" helps you find out if others have reported
-            experiencing similar symptoms, enabling you to seek medical advice
-            sooner and get the right care, potentially preventing long-term
-            issues.
+          <p className="text-xl mb-12 max-w-3xl mx-auto">
+            When you experience unexpected symptoms from a drug, our tool helps
+            you quickly validate if others have similar experiences. Seek
+            medical advice sooner, potentially preventing long-term
+            complications.
           </p>
-          <p className="text-lg text-gray-700 max-w-[60vw] mx-auto mb-6 text-center">
-            Even with extensive clinical trials, doctors and pharmaceutical
-            companies don&apos;t always know every possible side effect. Many
-            side effects become apparent only after a medication is used by a
-            larger population.
-          </p>
-
-          <div className="bg-white shadow-lg rounded-lg p-6 mx-auto max-w-[400px]">
-            <h3 className="text-xl font-semibold text-red-700 mb-4 text-center">
-              Side Effects Discovered After Wider Use
-            </h3>
-            <div className="relative h-60">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="bg-white p-8 rounded-lg shadow-2xl">
+              <h3 className="text-2xl font-semibold mb-4 text-red-600">
+                Why It Matters
+              </h3>
+              <ul className="text-left list-disc list-inside space-y-2">
+                <li>Doctors may not know every possible side effect</li>
+                <li>
+                  Pharmaceutical companies discover many side effects
+                  post-market
+                </li>
+                <li>Your experience could help others facing similar issues</li>
+                <li>
+                  Early detection can prevent serious health complications
+                </li>
+              </ul>
+            </div>
+            <div className="relative h-80 w-80 mx-auto">
               <Doughnut data={data} options={options} />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-2xl font-bold text-red-700">30.8%</div>
+                <div className="text-3xl font-bold text-red-600">30.8%</div>
               </div>
+              <p className="mt-4 text-sm text-gray-600">
+                30.8% of new drugs had significant side effects discovered after
+                market release (2001-2010).
+              </p>
             </div>
-            <p className="text-sm text-gray-600 mt-4 text-center">
-              New Drugs: 30.8% had significant side effects discovered after
-              release (2001-2010).
-            </p>
           </div>
         </div>
       </section>
