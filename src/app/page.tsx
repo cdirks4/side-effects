@@ -54,7 +54,6 @@ export default function Home() {
       {/* Header */}
 
       {/* Spacer to prevent content from being hidden under the header */}
-      <div style={{ height: "80px" }}></div>
 
       {/* Hero Section */}
       <section className="py-16">
