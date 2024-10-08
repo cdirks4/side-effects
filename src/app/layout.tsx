@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./fonts.css";
 import Head from "next/head";
 import { useState } from "react";
 import Navbar from "./components/navbar";

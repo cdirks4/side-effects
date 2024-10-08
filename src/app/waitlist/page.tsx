@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Head from "next/head";
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
@@ -20,7 +19,7 @@ export default function Waitlist() {
   const appInterestEntryField = "entry.2038789610";
   const willingnessToPayEntryField = "entry.386463666";
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Validate email
@@ -59,23 +58,14 @@ export default function Waitlist() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-red-50 to-red-100 text-gray-800 min-h-screen flex flex-col items-center justify-center">
-      <Head>
-        <title>Have you faced unusual side-effects?</title>
-        <meta
-          name="description"
-          content="Help us revolutionize healthcare by sharing your experiences with medication side effects."
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg ">
-        <h1 className="text-3xl font-bold mb-6 text-center text-red-700">
+    <div className="min-h-screen bg-gradient-to-r from-purple-100 to-pink-100 text-gray-800 flex flex-col items-center justify-center font-mackinac">
+      <main className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg m-6">
+        <h1 className="text-3xl font-bold mb-6 text-center text-indigo-900">
           Have You Faced Unusual Side-Effects?
         </h1>
-        <p className="text-sm text-gray-700 mb-6">
-          "Help us revolutionize healthcare by confirming the hidden side
-          effects of medications."
+        <p className="text-lg text-gray-700 mb-6">
+          Help us revolutionize healthcare by confirming the hidden side effects
+          of medications.
           <br />
           Approximately 30 percent of medication side effects are reported
           <strong> after </strong> the medication is launched. You may be
@@ -88,7 +78,8 @@ export default function Waitlist() {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              l
+              className="block text-lg font-medium text-gray-700 mb-2"
             >
               Email Address
             </label>
@@ -97,7 +88,7 @@ export default function Waitlist() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 bg-purple-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
           </div>
@@ -105,7 +96,7 @@ export default function Waitlist() {
           <div className="mb-4">
             <label
               htmlFor="sideEffectExperience"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-lg font-medium text-gray-700 mb-2"
             >
               Have you ever had a side-effect from a medication that was
               unreported or under-reported?
@@ -114,7 +105,7 @@ export default function Waitlist() {
               id="sideEffectExperience"
               value={sideEffectExperience}
               onChange={(e) => setSideEffectExperience(e.target.value)}
-              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-lg"
               required
             >
               <option value="">Select...</option>
@@ -126,7 +117,7 @@ export default function Waitlist() {
           <div className="mb-4">
             <label
               htmlFor="onlineValidation"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-lg font-medium text-gray-700 mb-2"
             >
               Have you ever used online forums, like Reddit, to validate your
               symptoms/side-effects?
@@ -135,7 +126,7 @@ export default function Waitlist() {
               id="onlineValidation"
               value={onlineValidation}
               onChange={(e) => setOnlineValidation(e.target.value)}
-              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-lg "
               required
             >
               <option value="">Select...</option>
@@ -147,7 +138,7 @@ export default function Waitlist() {
           <div className="mb-4">
             <label
               htmlFor="appInterest"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-lg font-medium text-gray-700 mb-2"
             >
               Will you use an app that confirms side-effects not yet reported
               clinically, but reported by other users?
@@ -156,7 +147,7 @@ export default function Waitlist() {
               id="appInterest"
               value={appInterest}
               onChange={(e) => setAppInterest(e.target.value)}
-              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-lg"
               required
             >
               <option value="">Select...</option>
@@ -169,7 +160,7 @@ export default function Waitlist() {
           <div className="mb-4">
             <label
               htmlFor="willingnessToPay"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-lg font-medium text-gray-700 mb-2"
             >
               Will you pay $0.10 (10 cents) per use of the app?
             </label>
@@ -177,7 +168,7 @@ export default function Waitlist() {
               id="willingnessToPay"
               value={willingnessToPay}
               onChange={(e) => setWillingnessToPay(e.target.value)}
-              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full px-3 py-2 bg-red-50 text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-lg"
               required
             >
               <option value="">Select...</option>
@@ -189,7 +180,7 @@ export default function Waitlist() {
 
           {message && (
             <p
-              className={`text-sm ${
+              className={`text-md ${
                 isSubmitted ? "text-green-600" : "text-red-600"
               } mb-4`}
             >
@@ -198,7 +189,7 @@ export default function Waitlist() {
           )}
           <button
             type="submit"
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300"
+            className=" text-lg w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300"
           >
             Submit Your Response
           </button>

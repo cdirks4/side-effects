@@ -8,10 +8,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      fontFamily: {
+        mackinac: ['"P22 Mackinac Pro"', "serif"],
+      },
+      colors: {
+        indigo: {
+          600: "#4f46e5",
+          700: "#4338ca",
+          900: "#312e81",
+        },
       },
     },
   },
