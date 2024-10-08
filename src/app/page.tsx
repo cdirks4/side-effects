@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-100 to-pink-100 text-gray-800 font-mackinac">
+    <div className="min-h-screen bg-gradient-to-r from-purple-100 to-pink-100 text-gray-800 font-mackinac pt-20">
       {/* Header */}
 
       {/* Spacer to prevent content from being hidden under the header */}

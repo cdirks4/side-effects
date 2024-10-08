@@ -58,12 +58,12 @@ export default function Waitlist() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-100 to-pink-100 text-gray-800 flex flex-col items-center justify-center font-mackinac">
-      <main className="w-full max-w-lg p-8 bg-white rounded-lg shadow-lg m-6">
-        <h1 className="text-3xl font-bold mb-6 text-center text-indigo-900">
+    <div className="min-h-screen bg-gradient-to-r from-purple-100 to-pink-100 text-gray-800 flex flex-col items-center justify-center font-mackinac pt-20">
+      <main className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg m-6">
+        <h1 className="text-4xl font-bold mb-6 text-center text-indigo-900">
           Have You Faced Unusual Side-Effects?
         </h1>
-        <p className="text-lg text-gray-700 mb-6">
+        <p className="text-xl text-gray-700 mb-8">
           Help us revolutionize healthcare by confirming the hidden side effects
           of medications.
           <br />
@@ -74,11 +74,10 @@ export default function Waitlist() {
           We are building an app that allows users to confirm medication side
           effects that are not yet clinically recognized.
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="mb-4">
             <label
               htmlFor="email"
-              l
               className="block text-lg font-medium text-gray-700 mb-2"
             >
               Email Address

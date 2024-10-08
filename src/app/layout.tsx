@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "./fonts.css";
-import Head from "next/head";
-import { useState } from "react";
 import Navbar from "./components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Am I the Only One",
-  description: "Ai side effect discovery",
+  description: "AI side effect discovery",
 };
 
 export default function RootLayout({
@@ -20,8 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} h-screen bg-white`}>
-        <Navbar />
-        {children}
+        <div className="scale-75 origin-top-left min-h-screen w-[133.33%]">
+          <Navbar />
+          {children}
+        </div>
       </body>
     </html>
   );
