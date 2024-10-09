@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -24,10 +23,10 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`bg-gradient-to-r from-purple-100 to-pink-100 dark:from-gray-800 dark:to-gray-900
+      className={`bg-gradient-to-r from-purple-100 to-pink-100 
         fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-gradient-to-r from-purple-100 to-pink-100 dark:from-gray-800 dark:to-gray-900 shadow-md opacity-90"
+            ? "bg-gradient-to-r from-purple-100 to-pink-100    shadow-md opacity-90"
             : "bg-transparent"
         }`}
     >
@@ -50,12 +49,12 @@ const Navbar = () => {
                     cx="32"
                     cy="16"
                     r="8"
-                    className="fill-indigo-700 dark:fill-indigo-300"
+                    className="fill-indigo-700  "
                   />{" "}
                   {/* Head */}
                   <path
                     d="M20 43 C23 23 41 23 44 43 Z"
-                    className="fill-indigo-700 dark:fill-indigo-300 stroke-indigo-700 dark:stroke-indigo-300"
+                    className="fill-indigo-700  stroke-indigo-700 dark:stroke-indigo-300"
                   />
                   {/* Body */}
                   {/* Thought Bubble */}
@@ -70,7 +69,7 @@ const Navbar = () => {
                     y="16"
                     textAnchor="middle"
                     fontSize="12"
-                    className="fill-indigo-700 dark:fill-indigo-300 stroke-indigo-800 dark:stroke-indigo-300 "
+                    className="fill-indigo-700  stroke-indigo-800 dark:stroke-indigo-300 "
                     fontFamily="Arial, Helvetica, sans-serif"
                   >
                     ?
@@ -82,7 +81,7 @@ const Navbar = () => {
                     y="0"
                     textAnchor="middle"
                     fontSize="8"
-                    className="fill-indigo-800 dark:fill-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="fill-indigo-800     opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     fontFamily="Arial, Helvetica, sans-serif"
                   >
                     ?
@@ -93,7 +92,7 @@ const Navbar = () => {
                     y="8"
                     textAnchor="middle"
                     fontSize="8"
-                    className="fill-indigo-600 dark:fill-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="fill-indigo-700   opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     fontFamily="Arial, Helvetica, sans-serif"
                   >
                     ?
@@ -104,7 +103,7 @@ const Navbar = () => {
                     y="8"
                     textAnchor="middle"
                     fontSize="8"
-                    className="fill-indigo-600 dark:fill-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="fill-indigo-700    opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     fontFamily="Arial, Helvetica, sans-serif"
                   >
                     ?
@@ -116,7 +115,7 @@ const Navbar = () => {
           </div>
           <div className="flex space-x-6 items-center">
             <Link href="/waitlist">
-              <span className="text-sm text-indigo-900 dark:text-indigo-300 hover:text-indigo-700 dark:hover:text-indigo-500 transition duration-300">
+              <span className="text-sm text-indigo-700  hover:text-indigo-700 dark:hover:text-indigo-500 transition duration-300">
                 Explore
               </span>
             </Link>
