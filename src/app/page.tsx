@@ -1,8 +1,20 @@
 "use client";
 import Link from "next/link";
 import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  ChartOptions,
+} from "chart.js";
 import { useState, useEffect } from "react";
+import {
+  UserGroupIcon,
+  MagnifyingGlassIcon,
+  QuestionMarkCircleIcon,
+  AcademicCapIcon,
+} from "@heroicons/react/24/outline";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
@@ -24,27 +36,42 @@ export default function Home() {
     ],
   };
 
-  const options = {
+  const options: ChartOptions<"doughnut"> = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      animateRotate: true,
+      duration: 2000,
+    },
     plugins: {
       legend: {
-        position: "bottom" as const,
+        position: "bottom" as const, // Specify the position as a literal type
+        labels: {
+          usePointStyle: true,
+          pointStyle: "circle",
+        },
       },
       tooltip: {
         callbacks: {
-          label: function (tooltipItem: any) {
+          label: function (tooltipItem) {
             return `${tooltipItem.label}: ${tooltipItem.raw}%`;
           },
         },
       },
     },
     cutout: "70%",
-    onClick: (evt: any, elements: any) => {
+    onHover: (event, elements) => {
+      if (event.native) {
+        event.native.target.style.cursor = elements.length
+          ? "pointer"
+          : "default";
+      }
+    },
+    onClick: (evt, elements) => {
       if (elements.length > 0) {
         const index = elements[0].index;
         const label = data.labels[index];
-        setSelectedSegment(label);
+        setSelectedSegment(label as string);
       }
     },
   };
@@ -56,12 +83,12 @@ export default function Home() {
       {/* Spacer to prevent content from being hidden under the header */}
 
       {/* Hero Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl  text-indigo-900 mb-6 font-mackinac">
+      <section className="py-16 px-4 md:px-8">
+        <div className="container mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl text-indigo-900 mb-6 font-mackinac">
             Discover Comprehensive Side Effect Insights with AI
           </h1>
-          <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto font-mackinac">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto font-mackinac">
             &ldquo;Am I the Only One&rdquo; leverages AI to analyze both
             official medical data and user-reported experiences, providing a
             more complete understanding of medication side effects. Stay
@@ -144,9 +171,11 @@ export default function Home() {
             <div className="relative h-80 w-80 mx-auto">
               <Doughnut data={data} options={options} />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-3xl font-bold text-indigo-600">30.8%</div>
+                <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                  30.8%
+                </div>
               </div>
-              <p className="mt-4 text-sm text-gray-600">
+              <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
                 30.8% of new drugs had significant side effects discovered after
                 market release (2001-2010).
               </p>
@@ -158,12 +187,13 @@ export default function Home() {
       {/* User Groups Section */}
       <section className="py-16 bg-purple-50 shadow-md">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl  text-indigo-900 mb-6">
+          <h2 className="text-3xl text-indigo-900 mb-6">
             Who Can Benefit From Our Platform?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-[80vw] mx-auto">
             {/* Card for Everyday Users */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
+              <UserGroupIcon className="h-12 w-12 text-indigo-600 mb-4" />
               <h3 className="text-2xl font-medium text-indigo-900 mb-4">
                 Everyday Users Experiencing Side Effects
               </h3>
@@ -181,7 +211,8 @@ export default function Home() {
             </div>
 
             {/* Card for Speculative Users */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
+              <MagnifyingGlassIcon className="h-12 w-12 text-indigo-600 mb-4" />
               <h3 className="text-2xl font-medium text-indigo-900 mb-4">
                 Speculative Users
               </h3>
@@ -199,13 +230,15 @@ export default function Home() {
             </div>
 
             {/* Card for Patients Feeling Uncertain */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
+              <QuestionMarkCircleIcon className="h-12 w-12 text-indigo-600 mb-4" />
               <h3 className="text-2xl font-medium text-indigo-900 mb-4">
                 Patients Feeling Uncertain
               </h3>
               <p className="text-lg text-gray-700">
                 These users are looking for clarity when traditional sources
-                haven't provided sufficient answers about their side effects.
+                haven&apos;t provided sufficient answers about their side
+                effects.
               </p>
               <p className="text-lg text-gray-700 mt-4">
                 <span className="font-bold">Goal:</span> To gain a broader
@@ -215,7 +248,8 @@ export default function Home() {
             </div>
 
             {/* Card for Researchers and Healthcare Professionals */}
-            <div className="bg-white shadow-lg rounded-lg p-6">
+            <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
+              <AcademicCapIcon className="h-12 w-12 text-indigo-600 mb-4" />
               <h3 className="text-2xl font-medium text-indigo-900 mb-4">
                 Researchers and Healthcare Professionals
               </h3>
