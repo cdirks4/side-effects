@@ -1,17 +1,32 @@
 import { NextResponse } from "next/server";
+import fs from "fs/promises";
+import path from "path";
 
 export async function POST(request: Request) {
-  const { email } = await request.json();
+  const data = await request.json();
 
-  // Here you would typically send an actual email
-  // For now, we'll just log it and return a success message
-  console.log(`Mock email sent to: ${email}`);
+  try {
+    // Create a filename based on the current timestamp
+    const filename = `email_data_${Date.now()}.json`;
+    const filePath = path.join(process.cwd(), "data", filename);
 
-  // Simulate a slight delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Write the data to a JSON file
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 
-  return NextResponse.json(
-    { message: "Email sent successfully" },
-    { status: 200 }
-  );
+    console.log(`Data written to file: ${filename}`);
+
+    // Return success response
+    return NextResponse.json(
+      { message: "Data saved successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error saving data: ", error);
+
+    // Return error response
+    return NextResponse.json(
+      { message: "Failed to save data", error: (error as Error).message },
+      { status: 500 }
+    );
+  }
 }
