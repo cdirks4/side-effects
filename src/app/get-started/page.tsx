@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import reactionData from "../../../data/reaction_frequency_table.json";
 
 ChartJS.register(
   CategoryScale,
@@ -119,70 +120,59 @@ export default function GetStarted() {
     setPartialData([]);
     setReviewText(null);
     setLinkData(null);
-    setEmailSubmitted(false); // Reset email submitted state
+    setEmailSubmitted(false);
+    setRedditSearchResult(null);
 
     try {
       const queryParams = new URLSearchParams({
         drug_name: drug,
         drug_symptoms: concern,
       });
-      const response = await fetch(
-        `/api/drug-search?${queryParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const [drugSearchResponse, redditSearchResponse] = await Promise.all([
+        fetch(`/api/drug-search?${queryParams.toString()}`),
+        fetch(`/api/reddit-search?${queryParams.toString()}`),
+      ]);
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      if (!drugSearchResponse.ok || !redditSearchResponse.ok) {
+        throw new Error("One or more API responses were not ok");
       }
 
-      const data = await response.json();
+      const [drugSearchData, redditSearchData] = await Promise.all([
+        drugSearchResponse.json(),
+        redditSearchResponse.json(),
+      ]);
 
-      // Check for review_text and link_data
-      if (data.review_text) {
-        setReviewText(data.review_text);
+      // Process drug search data
+      if (drugSearchData.review_text) {
+        setReviewText(drugSearchData.review_text);
       }
-      if (data.link_data) {
-        setLinkData(data.link_data);
+      if (drugSearchData.link_data) {
+        setLinkData(drugSearchData.link_data);
       }
 
-      // Process the data from multiple APIs
+      // Create chart data from reaction frequency JSON
+      const top10Reactions = reactionData
+        .sort((a, b) => b.Frequency - a.Frequency)
+        .slice(0, 10);
 
-      // const allData = [...originalApiData, ...mockApi1Data, ...mockApi2Data];
-
-      // if (allData.length > 0) {
-      //   updateChartData(allData);
-      //   setShowChart(true);
-      //   // Send email with the results
-      //   await sendEmail(allData);
-      // } else {
-      //   throw new Error("No data available");
-      // }
-
-      // Add the Reddit search call
-
-      // You can now use this data to update your UI or state as needed
-      // For example:
-      try {
-        const response = await fetch(
-          `/api/reddit-search?${queryParams.toString()}`,
+      const chartData = {
+        labels: top10Reactions.map((reaction) => reaction.Reaction),
+        datasets: [
           {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const redditSearchData = await response.json();
-        console.log("Reddit search data:", redditSearchData);
-        setRedditSearchResult(redditSearchData);
-      } catch (error) {
-        console.log("Reddit search data:", error);
-      }
+            label: "Frequency of Side Effects",
+            data: top10Reactions.map((reaction) => reaction.Frequency),
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+          },
+        ],
+      };
+
+      setChartData(chartData);
+      setShowChart(true);
+
+      // Process Reddit search data
+      setRedditSearchResult(redditSearchData);
     } catch (error) {
       console.error("Error:", error);
       setError(
