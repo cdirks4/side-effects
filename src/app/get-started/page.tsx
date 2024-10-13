@@ -119,74 +119,51 @@ export default function GetStarted() {
     setPartialData([]);
     setReviewText(null);
     setLinkData(null);
-    setEmailSubmitted(false); // Reset email submitted state
+    setEmailSubmitted(false);
+    setRedditSearchResult(null);
 
     try {
       const queryParams = new URLSearchParams({
         drug_name: drug,
         drug_symptoms: concern,
       });
-      const response = await fetch(
-        `/api/drug-search?${queryParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      const [drugSearchResponse, redditSearchResponse] = await Promise.all([
+        fetch(`/api/drug-search?${queryParams.toString()}`),
+        fetch(`/api/reddit-search?${queryParams.toString()}`),
+      ]);
+
+      if (!drugSearchResponse.ok || !redditSearchResponse.ok) {
+        throw new Error("One or more API responses were not ok");
       }
 
-      const data = await response.json();
+      const [drugSearchData, redditSearchData] = await Promise.all([
+        drugSearchResponse.json(),
+        redditSearchResponse.json(),
+      ]);
 
-      // Check for review_text and link_data
-      if (data.review_text) {
-        setReviewText(data.review_text);
+      // Process drug search data
+      if (drugSearchData.review_text) {
+        setReviewText(drugSearchData.review_text);
       }
-      if (data.link_data) {
-        setLinkData(data.link_data);
+      if (drugSearchData.link_data) {
+        setLinkData(drugSearchData.link_data);
       }
 
-      // Process the data from multiple APIs
+      const allData = drugSearchData.data || [];
 
-      // const allData = [...originalApiData, ...mockApi1Data, ...mockApi2Data];
-
-      // if (allData.length > 0) {
-      //   updateChartData(allData);
-      //   setShowChart(true);
-      //   // Send email with the results
-      //   await sendEmail(allData);
-      // } else {
-      //   throw new Error("No data available");
-      // }
-
-      // Add the Reddit search call
-
-      // You can now use this data to update your UI or state as needed
-      // For example:
-      try {
-        const response = await fetch(
-          `/api/reddit-search?${queryParams.toString()}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const redditSearchData = await response.json();
-        console.log("Reddit search data:", redditSearchData);
-        setRedditSearchResult(redditSearchData);
-      } catch (error) {
-        console.log("Reddit search data:", error);
+      if (allData.length > 0) {
+        updateChartData(allData);
+        setShowChart(true);
+        await sendEmail(allData);
       }
+
+      // Process Reddit search data
+      setRedditSearchResult(redditSearchData);
     } catch (error) {
       console.error("Error:", error);
       setError(
-        "An error occurred while fetching data. We'll notify you when we have more information."
+        "An error occurred while fetching data. We&apos;ll notify you when we have more information."
       );
       setShowEmailForm(true);
     } finally {
@@ -383,7 +360,7 @@ export default function GetStarted() {
           )}
         </div>
 
-        {showChart && chartData && (
+        {/* {showChart && chartData && (
           <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
             <h2 className="text-2xl font-semibold text-black mb-6 text-center">
               Side Effects Histogram
@@ -396,7 +373,7 @@ export default function GetStarted() {
               <Bar data={chartData} options={chartOptions} />
             )}
           </div>
-        )}
+        )} */}
 
         {reviewText && (
           <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
