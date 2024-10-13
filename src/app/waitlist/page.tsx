@@ -58,7 +58,7 @@ export default function Waitlist() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-100 to-pink-100 text-gray-800 flex flex-col items-center justify-center font-mackinac pt-20">
+    <div className="min-h-screen bg-gradient-to-r from-purple-100 to-pink-100 text-gray-800 flex flex-col items-center justify-center font-montserrat pt-20">
       <main className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg m-6">
         <h1 className="text-4xl font-bold mb-6 text-center text-indigo-900">
           Have You Faced Unusual Side-Effects?
