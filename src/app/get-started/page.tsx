@@ -31,14 +31,18 @@ export default function GetStarted() {
   const { isSignedIn, user } = useUser();
   const [drug, setDrug] = useState("");
   const [concern, setConcern] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [chartLoading, setChartLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
   const [error, setError] = useState("");
   const [chartData, setChartData] = useState<any>(null);
-  const [chartLoading, setChartLoading] = useState(false);
   const [showChart, setShowChart] = useState(false);
   const [email, setEmail] = useState("");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [partialData, setPartialData] = useState<DrugData[]>([]);
+  const [reviewText, setReviewText] = useState<string | null>(null);
+  const [linkData, setLinkData] = useState<string | null>(null);
 
   useEffect(() => {
     if (isSignedIn && user?.primaryEmailAddress?.emailAddress) {
@@ -84,10 +88,14 @@ export default function GetStarted() {
       setError("Please fill out all fields.");
       return;
     }
-    setLoading(true);
+    setFetchLoading(true);
     setChartLoading(true);
     setError("");
     setShowEmailForm(false);
+    setShowChart(false);
+    setPartialData([]);
+    setReviewText(null);
+    setLinkData(null);
 
     try {
       const queryParams = new URLSearchParams({
@@ -110,48 +118,93 @@ export default function GetStarted() {
 
       const data = await response.json();
 
-      // Process the data and update the chart
-      if (
-        data &&
-        data.data &&
-        Array.isArray(data.data) &&
-        data.data.length > 0
-      ) {
-        const drugData: DrugData[] = data.data;
-        const drugCounts = drugData.reduce((acc, curr) => {
-          acc[curr.drug_name] = (acc[curr.drug_name] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>);
+      // Check for review_text and link_data
+      if (data.review_text) {
+        setReviewText(data.review_text);
+      }
+      if (data.link_data) {
+        setLinkData(data.link_data);
+      }
 
-        const sortedDrugNames = Object.keys(drugCounts)
-          .sort((a, b) => drugCounts[b] - drugCounts[a])
-          .slice(0, 10);
+      // Process the data from multiple APIs
+      const originalApiData = data.originalApi?.data || [];
+      const mockApi1Data = data.mockApi1?.data || [];
+      const mockApi2Data = data.mockApi2?.data || [];
 
-        setChartData({
-          labels: sortedDrugNames,
-          datasets: [
-            {
-              label: "Number of Variations",
-              data: sortedDrugNames.map((name) => drugCounts[name]),
-              backgroundColor: "rgba(75, 192, 192, 0.6)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-            },
-          ],
-        });
+      const allData = [...originalApiData, ...mockApi1Data, ...mockApi2Data];
+
+      if (allData.length > 0) {
+        updateChartData(allData);
         setShowChart(true);
+        // Send email with the results
+        await sendEmail(allData);
       } else {
-        setShowEmailForm(true);
-        setError(
-          "No data available for the given drug and symptom. We&apos;ll notify you when we have more information."
-        );
+        throw new Error("No data available");
       }
     } catch (error) {
       console.error("Error:", error);
-      setError("An error occurred while fetching data. Please try again.");
+      setError(
+        "An error occurred while fetching data. We'll notify you when we have more information."
+      );
+      setShowEmailForm(true);
     } finally {
-      setLoading(false);
+      setFetchLoading(false);
       setChartLoading(false);
+    }
+  };
+
+  const updateChartData = (newData: DrugData[]) => {
+    setPartialData((prevData) => [...prevData, ...newData]);
+    const drugCounts = newData.reduce((acc, curr) => {
+      acc[curr.drug_name] = (acc[curr.drug_name] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const sortedDrugNames = Object.keys(drugCounts)
+      .sort((a, b) => drugCounts[b] - drugCounts[a])
+      .slice(0, 10);
+
+    setChartData({
+      labels: sortedDrugNames,
+      datasets: [
+        {
+          label: "Number of Variations",
+          data: sortedDrugNames.map((name) => drugCounts[name]),
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    });
+  };
+
+  const sendEmail = async (data: DrugData[]) => {
+    setEmailLoading(true);
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user?.primaryEmailAddress?.emailAddress,
+          drug,
+          concern,
+          data: data.slice(0, 10), // Send top 10 results
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save data");
+      }
+
+      console.log("Data saved successfully");
+    } catch (error) {
+      console.error("Error saving data:", error);
+      setError("Failed to save results. Please try again.");
+    } finally {
+      setEmailLoading(false);
     }
   };
 
@@ -161,18 +214,23 @@ export default function GetStarted() {
       setError("Please enter a valid email address.");
       return;
     }
-    setLoading(true);
+    setEmailLoading(true);
     try {
       const response = await fetch("/api/send-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, drug, concern }),
+        body: JSON.stringify({
+          email,
+          drug,
+          concern,
+          timestamp: new Date().toISOString(),
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send email");
+        throw new Error("Failed to save email data");
       }
 
       setEmailSubmitted(true);
@@ -181,7 +239,7 @@ export default function GetStarted() {
       console.error("Error:", error);
       setError("Failed to submit email. Please try again.");
     } finally {
-      setLoading(false);
+      setEmailLoading(false);
     }
   };
 
@@ -231,11 +289,11 @@ export default function GetStarted() {
               <button
                 type="submit"
                 className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out ${
-                  loading ? "cursor-not-allowed opacity-50" : ""
+                  fetchLoading ? "cursor-not-allowed opacity-50" : ""
                 }`}
-                disabled={loading}
+                disabled={fetchLoading}
               >
-                {loading ? "Processing..." : "Submit"}
+                {fetchLoading ? "Processing..." : "Submit"}
               </button>
             </form>
           ) : (
@@ -266,11 +324,11 @@ export default function GetStarted() {
               <button
                 type="submit"
                 className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out ${
-                  loading ? "cursor-not-allowed opacity-50" : ""
+                  emailLoading ? "cursor-not-allowed opacity-50" : ""
                 }`}
-                disabled={loading}
+                disabled={emailLoading}
               >
-                {loading ? "Submitting..." : "Submit Email"}
+                {emailLoading ? "Submitting..." : "Submit Email"}
               </button>
             </form>
           )}
@@ -282,22 +340,41 @@ export default function GetStarted() {
           )}
         </div>
 
-        <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-semibold text-black mb-6 text-center">
-            Side Effects Histogram
-          </h2>
-          {chartLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-500"></div>
-            </div>
-          ) : showChart && chartData ? (
-            <Bar data={chartData} options={chartOptions} />
-          ) : (
-            <p className="text-center text-gray-500">
-              No data available yet. Please submit your query to see results.
-            </p>
-          )}
-        </div>
+        {showChart && chartData && (
+          <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
+            <h2 className="text-2xl font-semibold text-black mb-6 text-center">
+              Side Effects Histogram
+            </h2>
+            {chartLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-500"></div>
+              </div>
+            ) : (
+              <Bar data={chartData} options={chartOptions} />
+            )}
+          </div>
+        )}
+
+        {reviewText && (
+          <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
+            <h2 className="text-2xl font-semibold text-black mb-6 text-center">
+              Review Summary
+            </h2>
+            <p className="text-gray-700 whitespace-pre-line">{reviewText}</p>
+            {linkData && (
+              <div className="mt-4">
+                <a
+                  href={linkData}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 hover:text-indigo-800 underline"
+                >
+                  More Information
+                </a>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
