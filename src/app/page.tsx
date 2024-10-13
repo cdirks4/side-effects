@@ -163,7 +163,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* AI-Powered Analysis Section */}
+      {/* How Does It Work? Section */}
       <section
         ref={aiAnalysisRef}
         className={`bg-white py-20 shadow-lg transition-opacity duration-1000 ease-in-out ${
@@ -171,15 +171,75 @@ export default function Home() {
         }`}
       >
         <div className="container mx-auto text-center px-4">
-          <h2 className="text-3xl text-black mb-6 font-semibold">
-            AI-Powered Analysis of All Data Sources
+          <h2 className="text-4xl text-black mb-12 font-semibold">
+            HOW DOES IT WORK?
           </h2>
-          <p className="text-lg md:text-xl text-gray-700 mb-6 max-w-3xl mx-auto">
-            Our AI scours both official documentation and forums like Reddit to
-            bring you insights on side effects. We combine verified data with
-            real-world user reports to help you understand the complete picture
-            of how a medication may affect you.
-          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {/* Step 1 */}
+            <div className="flex flex-col items-center">
+              <div className="rounded-full p-6 mb-4">
+                <Image
+                  src="/assets/step0.png"
+                  alt="Step 1"
+                  width={150}
+                  height={150}
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">STEP 1</h3>
+              <p className="text-gray-700 font-light">
+                I have a symptom that could be a side effect.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex flex-col items-center">
+              <div className="rounded-full p-6 mb-4">
+                <Image
+                  src="/assets/step1.png"
+                  alt="Step 2"
+                  width={150}
+                  height={150}
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">STEP 2</h3>
+              <p className="text-gray-700 font-light">
+                Enter the drug name and symptom you&apos;re experiencing.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-center">
+              <div className="rounded-full p-6 mb-4">
+                <Image
+                  src="/assets/step2.png"
+                  alt="Step 3"
+                  width={150}
+                  height={150}
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">STEP 3</h3>
+              <p className="text-gray-700 font-light">
+                Our AI systems check thousands of verified and unreported side
+                effects.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="flex flex-col items-center">
+              <div className="rounded-full p-6 mb-4">
+                <Image
+                  src="/assets/step3.png"
+                  alt="Step 4"
+                  width={150}
+                  height={150}
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">STEP 4</h3>
+              <p className="text-gray-700 font-light">
+                Receive your information by email in minutes.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
