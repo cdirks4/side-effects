@@ -29,30 +29,27 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`bg-gradient-to-r from-purple-100 to-pink-100 
-        fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-gradient-to-r from-purple-100 to-pink-100 shadow-md opacity-90"
-            : "bg-transparent"
-        }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled ? "bg-[#E5E5E5] shadow-md opacity-90" : "bg-[#E5E5E5]"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <div className="text-lg font-mackinac text-indigo-800 font-semibold">
+          <div className="text-lg font-montserrat text-indigo-800 font-semibold">
             <Link href="/" className="text-center group flex items-center">
               <Image
                 src="/assets/am-i-the-only-logo.svg"
                 alt="Am I the Only One Logo"
-                width={55}
-                height={60}
+                width={80}
+                height={80}
                 className="transition-transform duration-300 transform group-hover:scale-110 mr-2"
               />
-              <span className="ml-2">Am I the Only One</span>
+              <span className="text-black">AM I THE ONLY ONE</span>
             </Link>
           </div>
           <div className="flex space-x-6 items-center">
             <Link href="/waitlist">
-              <span className="text-sm text-indigo-700 hover:text-indigo-700 dark:hover:text-indigo-500 transition duration-300">
+              <span className="text-sm text-black hover:text-indigo-700 dark:hover:text-indigo-500 transition duration-300">
                 Explore
               </span>
             </Link>

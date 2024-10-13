@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useUser, SignInButton } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
-
+import { usePathname, useRouter } from "next/navigation";
+// import Image from "next/image";
 // Mock side effects from forums and official sources
 const mockSideEffects = {
   suboxone: {
@@ -25,7 +25,7 @@ const mockSideEffects = {
 
 export default function GetStarted() {
   const { isSignedIn, user } = useUser();
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const [drug, setDrug] = useState("");
   const [concern, setConcern] = useState("");
   const [email, setEmail] = useState("");
@@ -38,6 +38,7 @@ export default function GetStarted() {
   const [error, setError] = useState("");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const router = useRouter();
 
   // Use effect to set the email when the user is signed in
   useEffect(() => {
@@ -109,16 +110,37 @@ export default function GetStarted() {
     console.log("Submitting query with email:", userEmail);
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }
-    submitQuery(email);
-    setEmail("");
-    setEmailSubmitted(true);
-    setShowEmailForm(false);
+
+    setLoading(true);
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send email");
+      }
+
+      const data = await response.json();
+      console.log(data.message);
+      setEmailSubmitted(true);
+      setShowEmailForm(false);
+    } catch (error) {
+      console.error("Error:", error);
+      setError("Failed to send email. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const normalizeInput = (data: string) => {
@@ -132,9 +154,10 @@ export default function GetStarted() {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-purple-200 to-pink-100 flex flex-col items-center justify-start p-4">
+      <div className="mb-8 mt-4"></div>
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-5xl flex space-x-4 items-center mt-8"
+        className="w-full max-w-5xl flex space-x-4 items-center"
       >
         {/* Medication Name Input */}
         <input
@@ -142,7 +165,7 @@ export default function GetStarted() {
           id="drug"
           value={drug}
           onChange={(e) => setDrug(e.target.value)}
-          className="flex-grow-0 basis-1/4 px-3 py-2 rounded-md border-2 text-gray-900 placeholder-gray-500 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-base"
+          className="flex-grow-0 basis-1/4 px-3 py-2 rounded-md border-2 text-gray-900 placeholder-gray-500 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
           placeholder="Enter medication name"
           required
         />
@@ -153,7 +176,7 @@ export default function GetStarted() {
           id="concern"
           value={concern}
           onChange={(e) => setConcern(e.target.value)}
-          className="flex-grow basis-3/4 px-3 py-2 rounded-md border-2 text-gray-900 placeholder-gray-500 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-base"
+          className="flex-grow basis-3/4 px-3 py-2 rounded-md border-2 text-gray-900 placeholder-gray-500 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
           placeholder="Describe the side effect"
           required
         />
@@ -162,19 +185,37 @@ export default function GetStarted() {
         {isSignedIn ? (
           <button
             type="submit"
-            className={`py-2 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out ${
+            className={`py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out flex items-center ${
               loading ? "cursor-not-allowed opacity-50" : ""
             }`}
             disabled={loading}
           >
             {loading ? "Normalizing..." : "Submit"}
+            {/* <Image
+              src="./assets/am-i-the-only-logo.svg"
+              alt="Logo"
+              width={24}
+              height={24}
+            /> */}
           </button>
         ) : (
-          <SignInButton mode="modal" afterSignInUrl={pathname}>
+          <SignInButton mode="modal">
             <button
               type="button"
-              className="py-2 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out flex items-center"
             >
+              <svg
+                className="w-5 h-5 mr-2"
+                viewBox="0 0 368.5 255.1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g fill="currentColor">
+                  <path d="M297.1,207.9h-150V57.9h150v150Z" />
+                  <path d="M222.1,207.9c41.4,0,75-33.6,75-75s-33.6-75-75-75-75,33.6-75,75,33.6,75,75,75Z" />
+                  <path d="M53.7,57.9v150h150V57.9H53.7Z" />
+                  <path d="M179.9,143.5c-2,0-3.7,1.3-4.4,3.1h-5.9l-2.5-4.2c-.3-.6-1-.9-1.7-.8-.7,0-1.2.5-1.4,1.2l-1.9,5.9-4.6-27.8c-.1-.9-.9-1.5-1.8-1.4-.9,0-1.6.7-1.6,1.6l-3.5,44.2-4.1-23.5c-.1-.8-.8-1.3-1.5-1.4-.8,0-1.5.4-1.8,1.1l-2.5,6.7-1.6-3.3c-.3-.6-.9-1-1.5-1h-14.7c-.9,0-1.7.8-1.7,1.7v14.4c0,9.1-7.4,16.5-16.5,16.5h-.2c-9.1,0-16.5-7.4-16.5-16.5v-29h36.6v-26.1c0-11-8.9-19.9-19.9-19.9h-.2c-11,0-19.9,8.9-19.9,19.9v55.1c0,11,8.9,19.9,19.9,19.9h.2c11,0,19.9-8.9,19.9-19.9v-12.7h11.9l2.9,5.9c.3.6.9,1,1.6,1,.7,0,1.3-.5,1.5-1.1l1.7-4.5,5.4,30.7c.1.8.9,1.4,1.7,1.4h0c.9,0,1.6-.7,1.6-1.6l3.5-43.7,3.5,21c.1.8.8,1.4,1.6,1.4.8,0,1.5-.4,1.8-1.2l2.9-9.1,1.1,1.8c.3.5.9.8,1.5.8h7c.7,1.6,2.3,2.7,4.2,2.7s4.6-2.1,4.6-4.6-2.1-4.6-4.6-4.6Z" />
+                </g>
+              </svg>
               Sign In to Submit
             </button>
           </SignInButton>
