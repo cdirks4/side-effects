@@ -41,7 +41,7 @@ const Navbar = () => {
           <div className="text-lg font-mackinac text-indigo-800 font-semibold">
             <Link href="/" className="text-center group flex items-center">
               <Image
-                src="/assets/Am I The Only One logo (1).svg"
+                src="/assets/am-i-the-only-logo.svg"
                 alt="Am I the Only One Logo"
                 width={55}
                 height={60}
