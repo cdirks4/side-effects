@@ -85,7 +85,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="py-16 px-4 md:px-8">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl text-indigo-900 mb-6 font-mackinac">
+          <h1 className="text-2xl sm:text-5xl md:text-6xl text-indigo-900 mb-6 font-mackinac">
             Discover Comprehensive Side Effect Insights with AI
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto font-mackinac">
@@ -94,9 +94,9 @@ export default function Home() {
             more complete understanding of medication side effects. Stay
             informed with our powerful, data-driven platform.
           </p>
-          <Link href="/waitlist" className="inline-block">
+          <Link href="/get-started" className="inline-block">
             <span className="gap-4 btn-xl btn-purple group/btn btn-border-dark rounded-full bg-indigo-600 text-white font-semibold text-lg md:text-xl py-3 px-8 hover:bg-indigo-700 transition duration-300 cursor-pointer flex items-center">
-              Share Your Experience
+              Get Started{" "}
               <div className="flex items-center opacity-50 group-hover/btn:opacity-100 transition-opacity ml-2">
                 <svg
                   role="img"

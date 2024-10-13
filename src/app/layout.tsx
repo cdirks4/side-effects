@@ -20,9 +20,7 @@ export default function RootLayout({
       <body className={`${inter.className} h-screen bg-white`}>
         <Navbar />
 
-        <div className="scale-75 origin-top-left min-h-screen w-[133.33%] pt-16">
-          {children}
-        </div>
+        <div className="origin-top-left min-h-screen  pt-16">{children}</div>
       </body>
     </html>
   );
