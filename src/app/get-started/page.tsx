@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { Bar } from "react-chartjs-2";
+import ReactMarkdown from "react-markdown";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -43,6 +44,7 @@ export default function GetStarted() {
   const [partialData, setPartialData] = useState<DrugData[]>([]);
   const [reviewText, setReviewText] = useState<string | null>(null);
   const [linkData, setLinkData] = useState<string | null>(null);
+  const [redditSearchResult, setRedditSearchResult] = useState<any>(null);
 
   useEffect(() => {
     if (isSignedIn && user?.primaryEmailAddress?.emailAddress) {
@@ -78,6 +80,25 @@ export default function GetStarted() {
     },
   };
 
+  const fetchRedditSearch = async (drugName: string, symptoms: string) => {
+    try {
+      const queryParams = new URLSearchParams({
+        drug_name: drugName,
+        symptoms: symptoms,
+      });
+
+      if (!response.ok) {
+        throw new Error("Reddit search request failed");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching Reddit search data:", error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isSignedIn) {
@@ -88,6 +109,8 @@ export default function GetStarted() {
       setError("Please fill out all fields.");
       return;
     }
+
+    // Clear previous states
     setFetchLoading(true);
     setChartLoading(true);
     setError("");
@@ -96,6 +119,7 @@ export default function GetStarted() {
     setPartialData([]);
     setReviewText(null);
     setLinkData(null);
+    setEmailSubmitted(false); // Reset email submitted state
 
     try {
       const queryParams = new URLSearchParams({
@@ -127,19 +151,37 @@ export default function GetStarted() {
       }
 
       // Process the data from multiple APIs
-      const originalApiData = data.originalApi?.data || [];
-      const mockApi1Data = data.mockApi1?.data || [];
-      const mockApi2Data = data.mockApi2?.data || [];
 
-      const allData = [...originalApiData, ...mockApi1Data, ...mockApi2Data];
+      // const allData = [...originalApiData, ...mockApi1Data, ...mockApi2Data];
 
-      if (allData.length > 0) {
-        updateChartData(allData);
-        setShowChart(true);
-        // Send email with the results
-        await sendEmail(allData);
-      } else {
-        throw new Error("No data available");
+      // if (allData.length > 0) {
+      //   updateChartData(allData);
+      //   setShowChart(true);
+      //   // Send email with the results
+      //   await sendEmail(allData);
+      // } else {
+      //   throw new Error("No data available");
+      // }
+
+      // Add the Reddit search call
+
+      // You can now use this data to update your UI or state as needed
+      // For example:
+      try {
+        const response = await fetch(
+          `/api/reddit-search?${queryParams.toString()}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const redditSearchData = await response.json();
+        console.log("Reddit search data:", redditSearchData);
+        setRedditSearchResult(redditSearchData);
+      } catch (error) {
+        console.log("Reddit search data:", error);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -335,7 +377,8 @@ export default function GetStarted() {
 
           {emailSubmitted && (
             <p className="text-green-500 text-sm text-center mt-4">
-              Thank you! We&apos;ll notify you when we have more information.
+              Thank you&apos;! We&apos;ll notify you when we have more
+              information.
             </p>
           )}
         </div>
@@ -360,7 +403,9 @@ export default function GetStarted() {
             <h2 className="text-2xl font-semibold text-black mb-6 text-center">
               Review Summary
             </h2>
-            <p className="text-gray-700 whitespace-pre-line">{reviewText}</p>
+            <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl mx-auto">
+              <ReactMarkdown>{reviewText}</ReactMarkdown>
+            </div>
             {linkData && (
               <div className="mt-4">
                 <a
@@ -373,6 +418,16 @@ export default function GetStarted() {
                 </a>
               </div>
             )}
+          </div>
+        )}
+
+        {redditSearchResult && (
+          <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
+            <h2 className="text-2xl font-semibold text-black mb-6 text-center">
+              Reddit Search Result
+            </h2>
+            <p>Symptom: {redditSearchResult.symptom}</p>
+            <p>Present: {redditSearchResult["symptom present or not"]}</p>
           </div>
         )}
       </div>
