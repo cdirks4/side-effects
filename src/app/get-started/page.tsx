@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser, SignInButton } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 
 // Mock side effects from forums and official sources
 const mockSideEffects = {
@@ -22,6 +24,8 @@ const mockSideEffects = {
 };
 
 export default function GetStarted() {
+  const { isSignedIn, user } = useUser();
+  const pathname = usePathname();
   const [drug, setDrug] = useState("");
   const [concern, setConcern] = useState("");
   const [email, setEmail] = useState("");
@@ -35,6 +39,13 @@ export default function GetStarted() {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
 
+  // Use effect to set the email when the user is signed in
+  useEffect(() => {
+    if (isSignedIn && user?.primaryEmailAddress?.emailAddress) {
+      setEmail(user.primaryEmailAddress.emailAddress);
+    }
+  }, [isSignedIn, user]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -43,6 +54,26 @@ export default function GetStarted() {
       return;
     }
 
+    if (!isSignedIn) {
+      setError("Please sign in to submit your query.");
+      return;
+    }
+
+    // Check if the user's email is verified
+    const userEmail = user?.primaryEmailAddress?.emailAddress;
+    const isEmailVerified =
+      user?.primaryEmailAddress?.verification?.status === "verified";
+
+    if (!isEmailVerified) {
+      setShowEmailForm(true);
+      return;
+    }
+
+    // Proceed with the submission
+    submitQuery(userEmail);
+  };
+
+  const submitQuery = (userEmail: string | undefined) => {
     // Reset the state on submit
     setLoading(true);
     setError("");
@@ -73,10 +104,9 @@ export default function GetStarted() {
 
       setLoading(false);
     }, 2000);
-  };
 
-  const normalizeInput = (data: string) => {
-    return data.trim().toLowerCase().replace(/\s+/g, "-");
+    // Here you would typically send the query and email to your backend
+    console.log("Submitting query with email:", userEmail);
   };
 
   const handleEmailSubmit = (e: React.FormEvent) => {
@@ -85,10 +115,14 @@ export default function GetStarted() {
       setError("Please enter a valid email address.");
       return;
     }
-    alert("Thank you! We'll notify you when the data becomes available.");
+    submitQuery(email);
     setEmail("");
     setEmailSubmitted(true);
     setShowEmailForm(false);
+  };
+
+  const normalizeInput = (data: string) => {
+    return data.trim().toLowerCase().replace(/\s+/g, "-");
   };
 
   const validateEmail = (email: string) => {
@@ -125,15 +159,26 @@ export default function GetStarted() {
         />
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          className={`py-2 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out ${
-            loading ? "cursor-not-allowed opacity-50" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Normalizing..." : "Submit"}
-        </button>
+        {isSignedIn ? (
+          <button
+            type="submit"
+            className={`py-2 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out ${
+              loading ? "cursor-not-allowed opacity-50" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? "Normalizing..." : "Submit"}
+          </button>
+        ) : (
+          <SignInButton mode="modal" afterSignInUrl={pathname}>
+            <button
+              type="button"
+              className="py-2 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+            >
+              Sign In to Submit
+            </button>
+          </SignInButton>
+        )}
       </form>
 
       {loading && (
@@ -190,10 +235,14 @@ export default function GetStarted() {
       {showEmailForm && !emailSubmitted && (
         <div className="text-center mt-6">
           <h2 className="text-lg font-semibold text-indigo-900 mb-4">
-            Data not available yet
+            {normalizedData
+              ? "Data not available yet"
+              : "Email Verification Required"}
           </h2>
           <p className="mb-4 text-gray-700">
-            Submit your email, and we'll notify you when the data is ready.
+            {normalizedData
+              ? "Submit your email, and we'll notify you when the data is ready."
+              : "Please verify your email or provide a valid email address to continue."}
           </p>
           <form
             onSubmit={handleEmailSubmit}
@@ -203,7 +252,7 @@ export default function GetStarted() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="px-3 py-2 rounded-md border-2 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-base w-64"
+              className="text-gray-900 px-3 py-2 rounded-md border-2 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-base w-64"
               placeholder="Enter your email"
               required
             />

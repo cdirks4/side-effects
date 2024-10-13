@@ -21,5 +21,6 @@ const config: Config = {
     },
   },
   plugins: [],
+  darkMode: "class", // Enable dark mode
 };
 export default config;
