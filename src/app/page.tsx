@@ -150,15 +150,17 @@ export default function Home() {
         </div>
 
         {/* Woman Image */}
-        <div className="absolute top-0 right-0 w-full 2 h-full">
-          <Image
-            src="/assets/banner_woman.png"
-            alt="Woman"
-            layout="fill"
-            objectFit="contain"
-            objectPosition="right center"
-            className="animate-fade-in"
-          />
+        <div className="absolute top-0 right-0 w-full h-full">
+          <div className="relative w-full h-full md:h-3/4 lg:h-full">
+            <Image
+              src="/assets/banner_woman.png"
+              alt="Woman"
+              layout="fill"
+              objectFit="contain"
+              objectPosition="right bottom"
+              className="animate-fade-in"
+            />
+          </div>
         </div>
       </section>
       {/* AI-Powered Analysis Section */}
