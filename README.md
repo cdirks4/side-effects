@@ -38,7 +38,6 @@ Meds-AI is a Next.js-based web application that helps users track and report med
     
     ```sh
     NEXT_PUBLIC_CLERK_FRONTEND_API=<your_clerk_frontend_api_key>
-    NEXT_PUBLIC_DRUG_SEARCH_API_URL=<your_drug_search_api_endpoint>
 4.  Run the development server:
     
     ```sh
