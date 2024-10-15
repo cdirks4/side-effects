@@ -48,7 +48,7 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex space-x-6 items-center">
-            <Link href="/waitlist">
+            <Link href="/get-started">
               <span className="text-sm text-black hover:text-indigo-700 dark:hover:text-indigo-500 transition duration-300">
                 Explore
               </span>

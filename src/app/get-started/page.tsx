@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { Bar } from "react-chartjs-2";
 import ReactMarkdown from "react-markdown";
+import Image from "next/image";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -42,7 +43,6 @@ export default function GetStarted() {
   const [email, setEmail] = useState("");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [partialData, setPartialData] = useState<DrugData[]>([]);
   const [reviewText, setReviewText] = useState<string | null>(null);
   const [linkData, setLinkData] = useState<string | null>(null);
   const [redditSearchResult, setRedditSearchResult] = useState<any>(null);
@@ -61,7 +61,7 @@ export default function GetStarted() {
       },
       title: {
         display: true,
-        text: "Drug Variations for Given Search",
+        text: "Top 10 Side Effects",
       },
     },
     scales: {
@@ -69,35 +69,16 @@ export default function GetStarted() {
         beginAtZero: true,
         title: {
           display: true,
-          text: "Count",
+          text: "Frequency",
         },
       },
       x: {
         title: {
           display: true,
-          text: "Drug Names",
+          text: "Side Effects",
         },
       },
     },
-  };
-
-  const fetchRedditSearch = async (drugName: string, symptoms: string) => {
-    try {
-      const queryParams = new URLSearchParams({
-        drug_name: drugName,
-        symptoms: symptoms,
-      });
-
-      if (!response.ok) {
-        throw new Error("Reddit search request failed");
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error fetching Reddit search data:", error);
-      throw error;
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -111,13 +92,11 @@ export default function GetStarted() {
       return;
     }
 
-    // Clear previous states
     setFetchLoading(true);
     setChartLoading(true);
     setError("");
     setShowEmailForm(false);
     setShowChart(false);
-    setPartialData([]);
     setReviewText(null);
     setLinkData(null);
     setEmailSubmitted(false);
@@ -128,6 +107,7 @@ export default function GetStarted() {
         drug_name: drug,
         drug_symptoms: concern,
       });
+
       const [drugSearchResponse, redditSearchResponse] = await Promise.all([
         fetch(`/api/drug-search?${queryParams.toString()}`),
         fetch(`/api/reddit-search?${queryParams.toString()}`),
@@ -169,7 +149,7 @@ export default function GetStarted() {
       };
 
       setChartData(chartData);
-      setShowChart(true);
+      setShowChart(false);
 
       // Process Reddit search data
       setRedditSearchResult(redditSearchData);
@@ -182,61 +162,6 @@ export default function GetStarted() {
     } finally {
       setFetchLoading(false);
       setChartLoading(false);
-    }
-  };
-
-  const updateChartData = (newData: DrugData[]) => {
-    setPartialData((prevData) => [...prevData, ...newData]);
-    const drugCounts = newData.reduce((acc, curr) => {
-      acc[curr.drug_name] = (acc[curr.drug_name] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    const sortedDrugNames = Object.keys(drugCounts)
-      .sort((a, b) => drugCounts[b] - drugCounts[a])
-      .slice(0, 10);
-
-    setChartData({
-      labels: sortedDrugNames,
-      datasets: [
-        {
-          label: "Number of Variations",
-          data: sortedDrugNames.map((name) => drugCounts[name]),
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
-        },
-      ],
-    });
-  };
-
-  const sendEmail = async (data: DrugData[]) => {
-    setEmailLoading(true);
-    try {
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user?.primaryEmailAddress?.emailAddress,
-          drug,
-          concern,
-          data: data.slice(0, 10), // Send top 10 results
-          timestamp: new Date().toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save data");
-      }
-
-      console.log("Data saved successfully");
-    } catch (error) {
-      console.error("Error saving data:", error);
-      setError("Failed to save results. Please try again.");
-    } finally {
-      setEmailLoading(false);
     }
   };
 
@@ -253,16 +178,11 @@ export default function GetStarted() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          drug,
-          concern,
-          timestamp: new Date().toISOString(),
-        }),
+        body: JSON.stringify({ email, drug, concern }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save email data");
+        throw new Error("Failed to send email");
       }
 
       setEmailSubmitted(true);
@@ -276,12 +196,12 @@ export default function GetStarted() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#E5E5E5] to-[#F0F0F0] text-gray-800 font-montserrat">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white text-gray-800 font-montserrat">
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-semibold text-black mb-8 text-center">
+        <h1 className="text-4xl font-bold text-indigo-900 mb-8 text-center">
           Get Started
         </h1>
-        <div className="bg-white shadow-lg rounded-lg p-8 max-w-3xl mx-auto">
+        <div className="bg-white shadow-xl rounded-lg p-8 max-w-3xl mx-auto mb-12">
           {isSignedIn ? (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -330,7 +250,9 @@ export default function GetStarted() {
             </form>
           ) : (
             <div className="text-center">
-              <p className="mb-4">Please sign in to submit your query.</p>
+              <p className="mb-4 text-gray-600">
+                Please sign in to submit your query.
+              </p>
               <SignInButton mode="modal">
                 <button className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
                   Sign In
@@ -342,40 +264,11 @@ export default function GetStarted() {
           {error && (
             <p className="text-red-500 text-sm text-center mt-4">{error}</p>
           )}
-
-          {showEmailForm && !emailSubmitted && (
-            <form onSubmit={handleEmailSubmit} className="mt-6 space-y-4">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border-2 text-gray-900 placeholder-gray-500 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
-                placeholder="Enter your email for updates"
-                required
-              />
-              <button
-                type="submit"
-                className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out ${
-                  emailLoading ? "cursor-not-allowed opacity-50" : ""
-                }`}
-                disabled={emailLoading}
-              >
-                {emailLoading ? "Submitting..." : "Submit Email"}
-              </button>
-            </form>
-          )}
-
-          {emailSubmitted && (
-            <p className="text-green-500 text-sm text-center mt-4">
-              Thank you&apos;! We&apos;ll notify you when we have more
-              information.
-            </p>
-          )}
         </div>
 
         {showChart && chartData && (
-          <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold text-black mb-6 text-center">
+          <div className="bg-white shadow-xl rounded-lg p-8 max-w-4xl mx-auto mb-12">
+            <h2 className="text-2xl font-semibold text-indigo-900 mb-6 text-center">
               Side Effects Histogram
             </h2>
             {chartLoading ? (
@@ -388,9 +281,32 @@ export default function GetStarted() {
           </div>
         )}
 
+        {redditSearchResult && (
+          <div className="bg-white shadow-xl rounded-lg p-8 max-w-4xl mx-auto mb-12">
+            <h2 className="text-2xl font-semibold text-indigo-900 mb-6 text-center">
+              Reddit Search Result
+            </h2>
+            <p className="text-lg mb-2">
+              <span className="font-semibold">Symptom:</span>{" "}
+              {redditSearchResult.symptom}
+            </p>
+            <p className="text-lg">
+              <span className="font-semibold">Symptom Present:</span>{" "}
+              {redditSearchResult["symptom present or not"]}
+            </p>
+            <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+              <p className="text-sm text-gray-600">
+                This data is based on user reports from Reddit and may not be
+                medically verified. Always consult with a healthcare
+                professional for medical advice.
+              </p>
+            </div>
+          </div>
+        )}
+
         {reviewText && (
-          <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold text-black mb-6 text-center">
+          <div className="bg-white shadow-xl rounded-lg p-8 max-w-4xl mx-auto mb-12">
+            <h2 className="text-2xl font-semibold text-indigo-900 mb-6 text-center">
               Review Summary
             </h2>
             <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl mx-auto">
@@ -411,13 +327,40 @@ export default function GetStarted() {
           </div>
         )}
 
-        {redditSearchResult && (
-          <div className="mt-12 bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold text-black mb-6 text-center">
-              Reddit Search Result
+        {showEmailForm && !emailSubmitted && (
+          <div className="bg-white shadow-xl rounded-lg p-8 max-w-3xl mx-auto mb-12">
+            <h2 className="text-2xl font-semibold text-indigo-900 mb-6 text-center">
+              Get Notified
             </h2>
-            <p>Symptom: {redditSearchResult.symptom}</p>
-            <p>Present: {redditSearchResult["symptom present or not"]}</p>
+            <form onSubmit={handleEmailSubmit} className="space-y-4">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-3 py-2 rounded-md border-2 text-gray-900 placeholder-gray-500 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm"
+                placeholder="Enter your email for updates"
+                required
+              />
+              <button
+                type="submit"
+                className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out ${
+                  emailLoading ? "cursor-not-allowed opacity-50" : ""
+                }`}
+                disabled={emailLoading}
+              >
+                {emailLoading ? "Submitting..." : "Submit Email"}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {emailSubmitted && (
+          <div
+            className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-12"
+            role="alert"
+          >
+            <p className="font-bold">Thank you!</p>
+            <p>We'll notify you when we have more information.</p>
           </div>
         )}
       </div>
