@@ -1,6 +1,8 @@
 
 # AIMTO1-AI: Discover Medication Side Effects with AI
 
+![SundAI_summary_slide](https://github.com/user-attachments/assets/237dfc0e-e280-4d78-ba49-8c3b23cfbce1)
+
 Meds-AI is a Next.js-based web application that helps users track and report medication side effects. By leveraging AI to analyze official data and user-reported experiences (e.g., from Reddit), Meds-AI provides a comprehensive understanding of drug side effects, including those not listed in official documentation.
 
 ## Features
