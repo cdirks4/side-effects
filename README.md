@@ -84,7 +84,7 @@ Meds-AI is a Next.js-based web application that helps users track and report med
 
 ## Contributing
 
-We welcome contributions! If you'd like to contribute, please fork the repository and submit a pull request. Make sure to update the tests as appropriate.
+We welcome contributions! If you'd like to contribute, please fork the repository and submit a pull request. 
 
 ## License
 
