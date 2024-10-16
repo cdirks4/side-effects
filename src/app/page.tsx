@@ -17,6 +17,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useInView } from "react-intersection-observer";
+import { motion, useAnimation } from "framer-motion";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
@@ -37,7 +38,40 @@ export default function Home() {
     threshold: 0.1,
   });
 
-  // Effect to handle scroll and set header background
+  const [userGroupsRef, userGroupsInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+    rootMargin: "50px 0px", // This will start the animation earlier
+  });
+
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (userGroupsInView) {
+      controls.start("visible");
+    }
+  }, [userGroupsInView, controls]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    initial: { y: 20, opacity: 0 },
+    animate: { y: 0, opacity: 1 },
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
+  };
 
   // Data for the donut chart
   const data = {
@@ -92,23 +126,94 @@ export default function Home() {
     },
   };
 
+  const userGroups = [
+    {
+      title: "Everyday Users Experiencing Side Effects",
+      icon: (
+        <UserGroupIcon className="h-12 w-12 md:h-16 md:w-16 text-indigo-600 mx-auto" />
+      ),
+      color: "indigo",
+      description:
+        "Individuals currently dealing with side effects and seeking additional information from both official sources and real-world reports.",
+      goal: "To quickly find reliable information about side effects, combining medical documentation with user experiences to understand if their experiences are common or rare.",
+    },
+    {
+      title: "Speculative Users",
+      icon: (
+        <MagnifyingGlassIcon className="h-12 w-12 md:h-16 md:w-16 text-purple-600 mx-auto" />
+      ),
+      color: "purple",
+      description:
+        "Individuals seeking a deeper understanding of potential side effects before starting a new medication or evaluating current treatments.",
+      goal: "To make well-informed decisions about treatments by understanding potential side effects through a mix of official data and user-reported experiences.",
+    },
+    {
+      title: "Patients Feeling Uncertain",
+      icon: (
+        <QuestionMarkCircleIcon className="h-12 w-12 md:h-16 md:w-16 text-blue-600 mx-auto" />
+      ),
+      color: "blue",
+      description:
+        "Users looking for clarity when traditional sources haven&apos;t provided sufficient answers about their side effects.",
+      goal: "To gain a broader perspective by accessing relevant data and similar experiences reported by others, providing more context to their situation.",
+    },
+    {
+      title: "Researchers and Healthcare Professionals",
+      icon: (
+        <AcademicCapIcon className="h-12 w-12 md:h-16 md:w-16 text-green-600 mx-auto" />
+      ),
+      color: "green",
+      description:
+        "While primarily serving patients, our platform also benefits researchers and healthcare professionals by uncovering underreported side effects.",
+      goal: "To access a comprehensive dataset that helps improve patient care, identify trends, and inform future research by supplementing official data with real-world experiences.",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E5E5E5] to-[#F0F0F0] text-gray-800 font-montserrat">
       {/* Hero Section */}
-      <section className="relative py-16 px-4 md:px-8 overflow-hidden">
+      <section className="relative py-16 md:py-24 lg:py-26 px-4 md:px-8 overflow-hidden">
+        {/* Cloud Image */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            className="absolute inset-0"
+            initial={{ opacity: 0, x: 100, y: 100 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            transition={{ duration: 0.9, delay: 1 }}
+          >
+            <Image
+              src="/assets/banner_cloud.png"
+              alt="Cloud Background"
+              layout="fill"
+              objectFit="cover"
+              objectPosition="center"
+              className="object-right-bottom md:object-center lg:object-right-bottom"
+            />
+          </motion.div>
+        </div>
+
         <div className="container mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 text-center md:text-left">
-              <h1 className="font-semibold text-2xl sm:text-4xl md:text-5xl text-black mb-6 font-montserrat">
+          <div className="flex flex-row  items-center justify-between">
+            <motion.div
+              className="lg:w-1/2 text-center lg:text-left mb-8 lg:mb-0"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <h1 className="font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black mb-6 font-montserrat">
                 Discover Comprehensive Side Effect Insights with AI
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 max-w-xl">
+              <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 max-w-xl mx-auto md:mx-0">
                 &ldquo;Am I the Only One&rdquo; leverages AI to analyze both
                 official medical data and user-reported experiences, providing a
                 more complete understanding of medication side effects.
               </p>
               <Link href="/get-started" className="inline-block">
-                <span className="gap-4 btn-xl btn-purple group/btn btn-border-dark rounded-full bg-indigo-600 text-white font-semibold text-base md:text-lg py-3 px-8 hover:bg-indigo-700 transition duration-300 cursor-pointer flex items-center">
+                <motion.span
+                  className="gap-4 btn-xl btn-purple group/btn btn-border-dark rounded-full bg-indigo-600 text-white font-semibold text-base md:text-lg py-3 px-6 md:px-8 hover:bg-indigo-700 transition duration-300 cursor-pointer flex items-center justify-center"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   Get Started{" "}
                   <div className="flex items-center opacity-50 group-hover/btn:opacity-100 transition-opacity ml-2">
                     <svg
@@ -132,25 +237,19 @@ export default function Home() {
                       <path d="M7.293 1.707L13.586 8l-6.293 6.293a1 1 0 001.414 1.414l7-7a.999.999 0 000-1.414l-7-7a1 1 0 00-1.414 1.414z"></path>
                     </svg>
                   </div>
-                </span>
+                </motion.span>
               </Link>
-            </div>
+            </motion.div>
           </div>
         </div>
 
-        {/* Cloud Image */}
-        <div className="absolute top-0 right-0 w-full h-full overflow-hidden">
-          <Image
-            src="/assets/banner_cloud.png"
-            alt="Cloud Background"
-            layout="fill"
-            objectFit="cover"
-            className="animate-slide-left"
-          />
-        </div>
-
         {/* Woman Image */}
-        <div className="absolute top-0 right-0 w-full h-full">
+        <motion.div
+          className="absolute top-0 right-0 w-full h-full"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
           <div className="relative w-full h-full md:h-3/4 lg:h-full">
             <Image
               src="/assets/banner_woman.png"
@@ -158,114 +257,144 @@ export default function Home() {
               layout="fill"
               objectFit="contain"
               objectPosition="right bottom"
-              className="animate-fade-in"
             />
           </div>
-        </div>
+        </motion.div>
       </section>
       {/* How Does It Work? Section */}
-      <section
+      <motion.section
         ref={aiAnalysisRef}
-        className={`bg-white py-20 shadow-lg transition-opacity duration-1000 ease-in-out ${
-          aiAnalysisInView ? "opacity-100" : "opacity-0"
-        }`}
+        initial={{ opacity: 0, y: 50 }}
+        animate={aiAnalysisInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        className="bg-white py-12 md:py-20 shadow-lg"
       >
         <div className="container mx-auto text-center px-4">
-          <h2 className="text-4xl text-black mb-12 font-semibold">
+          <motion.h2
+            initial={{ opacity: 0, y: -20 }}
+            animate={aiAnalysisInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-2xl md:text-3xl text-black mb-8 md:mb-12 font-semibold"
+          >
             HOW DOES IT WORK?
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          </motion.h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
             {/* Step 1 */}
-            <div className="flex flex-col items-center">
-              <div className="rounded-full p-6 mb-4">
+            <motion.div
+              key={1}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={aiAnalysisInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.35, duration: 0.6 }}
+              className="flex flex-col items-center"
+            >
+              <div className="rounded-full p-4 mb-4">
                 <Image
                   src="/assets/step0.png"
                   alt="Step 1"
-                  width={150}
-                  height={150}
+                  width={100}
+                  height={100}
                 />
               </div>
-              <h3 className="text-xl font-semibold mb-2">STEP 1</h3>
-              <p className="text-gray-700 font-light">
+              <h3 className="text-lg md:text-xl font-semibold mb-2">STEP 1</h3>
+              <p className="text-sm md:text-base text-gray-700 font-light">
                 I have a symptom that could be a side effect.
               </p>
-            </div>
+            </motion.div>
 
             {/* Step 2 */}
-            <div className="flex flex-col items-center">
-              <div className="rounded-full p-6 mb-4">
+            <motion.div
+              key={2}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={aiAnalysisInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.45, duration: 0.6 }}
+              className="flex flex-col items-center"
+            >
+              <div className="rounded-full p-4 mb-4">
                 <Image
                   src="/assets/step1.png"
                   alt="Step 2"
-                  width={150}
-                  height={150}
+                  width={100}
+                  height={100}
                 />
               </div>
-              <h3 className="text-xl font-semibold mb-2">STEP 2</h3>
-              <p className="text-gray-700 font-light">
+              <h3 className="text-lg md:text-xl font-semibold mb-2">STEP 2</h3>
+              <p className="text-sm md:text-base text-gray-700 font-light">
                 Enter the drug name and symptom you&apos;re experiencing.
               </p>
-            </div>
+            </motion.div>
 
             {/* Step 3 */}
-            <div className="flex flex-col items-center">
-              <div className="rounded-full p-6 mb-4">
+            <motion.div
+              key={3}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={aiAnalysisInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="flex flex-col items-center"
+            >
+              <div className="rounded-full p-4 mb-4">
                 <Image
                   src="/assets/step2.png"
                   alt="Step 3"
-                  width={150}
-                  height={150}
+                  width={100}
+                  height={100}
                 />
               </div>
-              <h3 className="text-xl font-semibold mb-2">STEP 3</h3>
-              <p className="text-gray-700 font-light">
+              <h3 className="text-lg md:text-xl font-semibold mb-2">STEP 3</h3>
+              <p className="text-sm md:text-base text-gray-700 font-light">
                 Our AI systems check thousands of verified and unreported side
                 effects.
               </p>
-            </div>
+            </motion.div>
 
             {/* Step 4 */}
-            <div className="flex flex-col items-center">
-              <div className="rounded-full p-6 mb-4">
+            <motion.div
+              key={4}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={aiAnalysisInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="flex flex-col items-center"
+            >
+              <div className="rounded-full p-4 mb-4">
                 <Image
                   src="/assets/step3.png"
                   alt="Step 4"
-                  width={150}
-                  height={150}
+                  width={100}
+                  height={100}
                 />
               </div>
-              <h3 className="text-xl font-semibold mb-2">STEP 4</h3>
-              <p className="text-gray-700 font-light">
+              <h3 className="text-lg md:text-xl font-semibold mb-2">STEP 4</h3>
+              <p className="text-sm md:text-base text-gray-700 font-light">
                 Receive your information by email in minutes.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Revealing Uncommon Side Effects Section */}
-      <section
+      <motion.section
         ref={uncommonSideEffectsRef}
-        className={`bg-gray-100 py-16 shadow-md transition-opacity duration-1000 ease-in-out ${
-          uncommonSideEffectsInView ? "opacity-100" : "opacity-0"
-        }`}
+        initial={{ opacity: 0 }}
+        animate={uncommonSideEffectsInView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8 }}
+        className="bg-gray-100 py-12 md:py-16 shadow-md"
       >
-        <div className="container mx-auto text-center px-4">
-          <h2 className="text-4xl mb-8 text-black font-semibold">
+        <div className="container mx-auto text-center px-4 py-2">
+          <h2 className="text-2xl md:text-4xl mb-6 md:mb-8 text-black font-semibold">
             Revealing Uncommon Side Effects
           </h2>
-          <p className="text-xl mb-12 max-w-3xl mx-auto text-gray-700">
+          <p className="text-base md:text-xl mb-8 md:mb-12 max-w-3xl mx-auto text-gray-700">
             When you experience unexpected symptoms from a medication, our tool
             helps you quickly validate if others have similar experiences. Seek
             medical advice sooner, potentially preventing long-term
             complications.
           </p>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="bg-white p-8 rounded-lg shadow-2xl">
-              <h3 className="text-2xl font-semibold mb-4 text-black">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="bg-white p-6 md:p-8 rounded-lg shadow-2xl">
+              <h3 className="text-xl md:text-2xl font-semibold mb-4 text-black">
                 Why It Matters
               </h3>
-              <ul className="text-left list-disc list-inside space-y-2 text-gray-700">
+              <ul className="text-left list-disc list-inside space-y-2 text-gray-700 text-sm md:text-base">
                 <li>
                   Discover side effects not yet reported in clinical trials
                 </li>
@@ -277,7 +406,10 @@ export default function Home() {
                 <li>Validate your experiences with real world examples</li>
               </ul>
             </div>
-            <div ref={chartRef} className="relative h-80 w-80 mx-auto">
+            <div
+              ref={chartRef}
+              className="relative h-64 w-64 sm:h-80 sm:w-80 mx-auto"
+            >
               {chartInView && (
                 <>
                   <Doughnut
@@ -299,121 +431,116 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
       {/* User Groups Section */}
-      <section className="py-16 bg-gray-50 shadow-md">
+      <motion.section
+        ref={userGroupsRef}
+        variants={containerVariants}
+        initial="hidden"
+        animate={userGroupsInView ? "visible" : "hidden"} // Change this line
+        className="py-12 md:py-16 bg-gray-50 shadow-md overflow-hidden"
+      >
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl text-black mb-8 font-semibold">
+          <motion.h2
+            variants={itemVariants}
+            className="text-3xl md:text-4xl text-black mb-6 md:mb-8 font-semibold"
+          >
             Who Can Benefit From Our Platform?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {/* Card for Everyday Users */}
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
-              <div className="bg-indigo-100 p-4">
-                <UserGroupIcon className="h-16 w-16 text-indigo-600 mx-auto" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold text-indigo-900 mb-4">
-                  Everyday Users Experiencing Side Effects
-                </h3>
-                <p className="text-lg text-gray-700 mb-4">
-                  Individuals currently dealing with side effects and seeking
-                  additional information from both official sources and
-                  real-world reports.
-                </p>
-                <div className="bg-indigo-50 p-4 rounded-lg">
-                  <p className="text-lg text-indigo-900">
-                    <span className="font-bold">Goal:</span> To quickly find
-                    reliable information about side effects, combining medical
-                    documentation with user experiences to understand if their
-                    experiences are common or rare.
-                  </p>
+          </motion.h2>
+          <motion.p
+            variants={itemVariants}
+            className="text-base md:text-lg text-gray-700 mb-8 md:mb-12 max-w-3xl mx-auto"
+          >
+            Our platform is designed to assist a variety of users—from
+            individuals experiencing side effects to healthcare professionals
+            seeking deeper insights. Discover how you can benefit from our
+            comprehensive side effect analysis.
+          </motion.p>
+          <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-6xl mx-auto">
+            {" "}
+            {/* Change this line */}
+            {userGroups.map((group, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl "
+              >
+                <div
+                  className={`p-2 md:p-4 ${
+                    group.color === "indigo"
+                      ? "bg-indigo-100"
+                      : group.color === "purple"
+                      ? "bg-purple-100"
+                      : group.color === "blue"
+                      ? "bg-blue-100"
+                      : "bg-green-100"
+                  }`}
+                >
+                  {group.icon}
                 </div>
-              </div>
-            </div>
-
-            {/* Card for Speculative Users */}
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
-              <div className="bg-purple-100 p-4">
-                <MagnifyingGlassIcon className="h-16 w-16 text-purple-600 mx-auto" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold text-purple-900 mb-4">
-                  Speculative Users
-                </h3>
-                <p className="text-lg text-gray-700 mb-4">
-                  Individuals seeking a deeper understanding of potential side
-                  effects before starting a new medication or evaluating current
-                  treatments.
-                </p>
-                <div className="bg-purple-50 p-4 rounded-lg">
-                  <p className="text-lg text-purple-900">
-                    <span className="font-bold">Goal:</span> To make
-                    well-informed decisions about treatments by understanding
-                    potential side effects through a mix of official data and
-                    user-reported experiences.
+                <div className="p-2 md:p-6 text-left">
+                  <h3
+                    className={`text-sm md:text-2xl font-semibold mb-1 md:mb-4 ${
+                      group.color === "indigo"
+                        ? "text-indigo-900"
+                        : group.color === "purple"
+                        ? "text-purple-900"
+                        : group.color === "blue"
+                        ? "text-blue-900"
+                        : "text-green-900"
+                    }`}
+                  >
+                    {group.title}
+                  </h3>
+                  <p className="text-xs md:text-lg text-gray-700 mb-1 md:mb-4">
+                    {group.description}
                   </p>
+                  <div
+                    className={`p-1 md:p-4 rounded-lg ${
+                      group.color === "indigo"
+                        ? "bg-indigo-50"
+                        : group.color === "purple"
+                        ? "bg-purple-50"
+                        : group.color === "blue"
+                        ? "bg-blue-50"
+                        : "bg-green-50"
+                    }`}
+                  >
+                    <p
+                      className={`text-xs md:text-lg ${
+                        group.color === "indigo"
+                          ? "text-indigo-900"
+                          : group.color === "purple"
+                          ? "text-purple-900"
+                          : group.color === "blue"
+                          ? "text-blue-900"
+                          : "text-green-900"
+                      }`}
+                    >
+                      <span className="font-bold">Goal:</span> {group.goal}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Card for Patients Feeling Uncertain */}
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
-              <div className="bg-blue-100 p-4">
-                <QuestionMarkCircleIcon className="h-16 w-16 text-blue-600 mx-auto" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold text-blue-900 mb-4">
-                  Patients Feeling Uncertain
-                </h3>
-                <p className="text-lg text-gray-700 mb-4">
-                  Users looking for clarity when traditional sources haven't
-                  provided sufficient answers about their side effects.
-                </p>
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <p className="text-lg text-blue-900">
-                    <span className="font-bold">Goal:</span> To gain a broader
-                    perspective by accessing relevant data and similar
-                    experiences reported by others, providing more context to
-                    their situation.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Card for Researchers and Healthcare Professionals */}
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1">
-              <div className="bg-green-100 p-4">
-                <AcademicCapIcon className="h-16 w-16 text-green-600 mx-auto" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-semibold text-green-900 mb-4">
-                  Researchers and Healthcare Professionals
-                </h3>
-                <p className="text-lg text-gray-700 mb-4">
-                  While primarily serving patients, our platform also benefits
-                  researchers and healthcare professionals by uncovering
-                  underreported side effects.
-                </p>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-lg text-green-900">
-                    <span className="font-bold">Goal:</span> To access a
-                    comprehensive dataset that helps improve patient care,
-                    identify trends, and inform future research by supplementing
-                    official data with real-world experiences.
-                  </p>
-                </div>
-              </div>
-            </div>
+              </motion.div>
+            ))}
           </div>
         </div>
-      </section>
+      </motion.section>
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-8">
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+        className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-6 md:py-8"
+      >
         <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2024 Am I the Only One. All rights reserved.</p>
+          <p className="text-sm md:text-base">
+            &copy; 2024 Am I the Only One. All rights reserved.
+          </p>
         </div>
-      </footer>
+      </motion.footer>
     </div>
   );
 }
